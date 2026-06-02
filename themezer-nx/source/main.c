@@ -49,11 +49,9 @@ int main(int argc, char* argv[])
     InitHid();
     //nxlinkStdio();
 
-    RequestInfo_t rI = {0, 0, 0, 0, 0, 0, "", false, 0, 0, 0, NULL, NULL, {NULL, 0, NULL, true}, NULL, false, 0, NULL};
+    RequestInfo_t rI = {0};
     SetDefaultsRequestInfo(&rI);
     rI.target = 0;
-    PageCache_t *pageCache = InitPageCache();
-    rI.pageCache = pageCache;
     ShapeLinker_t *items = NULL;
 
     AllocateInstalls(7);
@@ -95,21 +93,14 @@ int main(int argc, char* argv[])
         errLoc = 1;
     }
         
-    if (pageCache && items){
-        StorePageInCache(pageCache, &rI, items);
-        rI.lastPageDir = 1;
-        TriggerPagePreloads(pageCache, &rI);
-    }
-
     ShapeLinker_t *mainMenu = (items != NULL) ? CreateMainMenu(items, &rI) : errorMenu(errMessage, errLoc);
     MakeMenu(mainMenu, ButtonHandlerMainMenu, (items != NULL) ? HandleMainMenuFrame : NULL);
     ShapeLinkDispose(&mainMenu);
     
+    CleanupTransferInfo(&rI);
     FreeThemes(&rI);
 
     NNFREE(errMessage);
-
-    FreePageCache(pageCache);
 
     if (themeInstallerLocation){
         if (CheckIfInstallsQueued()){

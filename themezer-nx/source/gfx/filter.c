@@ -206,6 +206,11 @@ int ShowSideFilterMenu(Context_t *ctx){
         rI->includeNSFW = options.includeNSFW;
         rI->page = 1;
 
+        // 筛选条件变化
+        CleanupTransferInfo(rI);
+        FreeThemes(rI);  // 释放旧数据（无缓存后 themesCached 始终为 false）
+        rI->themesCached = false;
+
         if (MakeRequestAsCtx(ctx, rI)){
             if (rI->search != NULL)
                 free(rI->search);

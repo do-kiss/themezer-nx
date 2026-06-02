@@ -13,24 +13,13 @@ int NextPageButton(Context_t *ctx){
     ShapeLinker_t *all = ctx->all;
     RequestInfo_t *rI = ShapeLinkFind(all, DataType)->item;
 
-    if (rI->page >= rI->pageCount){
+    if (rI->page >= rI->pageCount)
         return 0;
-    }
 
     rI->page++;
-    rI->lastPageDir = 1;
-
-    PageCache_t *cache = (PageCache_t *)rI->pageCache;
-    PageCacheEntry_t *cached = cache ? FindPageCache(cache, rI->page) : NULL;
-
-    if (cached && cached->isLoaded){
-        LoadPageFromCache(ctx, rI, cached);
-    } else {
-        ShowLoadingPageUI(ctx, rI);
-        if (MakeRequestAsCtx(ctx, rI))
-            rI->page--;
-    }
-
+    ShowLoadingPageUI(ctx, rI);
+    if (MakeRequestAsCtx(ctx, rI))
+        rI->page--;
     return 0;
 }
 
@@ -38,43 +27,23 @@ int PrevPageButton(Context_t *ctx){
     ShapeLinker_t *all = ctx->all;
     RequestInfo_t *rI = ShapeLinkFind(all, DataType)->item;
 
-    if (rI->page <= 1){
+    if (rI->page <= 1)
         return 0;
-    }
 
     rI->page--;
-    rI->lastPageDir = -1;
-
-    PageCache_t *cache = (PageCache_t *)rI->pageCache;
-    PageCacheEntry_t *cached = cache ? FindPageCache(cache, rI->page) : NULL;
-
-    if (cached && cached->isLoaded){
-        LoadPageFromCache(ctx, rI, cached);
-    } else {
-        ShowLoadingPageUI(ctx, rI);
-        if (MakeRequestAsCtx(ctx, rI))
-            rI->page++;
-    }
-
+    ShowLoadingPageUI(ctx, rI);
+    if (MakeRequestAsCtx(ctx, rI))
+        rI->page++;
     return 0;
 }
 
 int ButtonHandlerMainMenu(Context_t *ctx){
-    RequestInfo_t *rI = ShapeLinkFind(ctx->all, DataType)->item;
-
     if (ctx->kHeld & (HidNpadButton_ZL | HidNpadButton_ZR))
         return ShowQuickIdLookup(ctx);
-    if (ctx->kHeld & HidNpadButton_R){
-        // 图片下载中禁止翻页，防止竞态闪退
-        if (!rI->tInfo.finished)
-            return 0;
+    if (ctx->kHeld & HidNpadButton_R)
         return NextPageButton(ctx);
-    }
-    if (ctx->kHeld & HidNpadButton_L){
-        if (!rI->tInfo.finished)
-            return 0;
+    if (ctx->kHeld & HidNpadButton_L)
         return PrevPageButton(ctx);
-    }
     if (ctx->kHeld & HidNpadButton_Y)
         return ShowSideFilterMenu(ctx);
     if (ctx->kHeld & HidNpadButton_X)

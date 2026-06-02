@@ -41,6 +41,11 @@ int ShowSideTargetMenu(Context_t *ctx){
             rI->target = selection;
             rI->includeNSFW = tempIncludeNSFW;
 
+            // 切换类型后释放旧数据
+            CleanupTransferInfo(rI);
+            FreeThemes(rI);
+            rI->themesCached = false;
+
             printf("Making request...\n");
             if (MakeRequestAsCtx(ctx, rI)){
                 rI->target = tempTarget;

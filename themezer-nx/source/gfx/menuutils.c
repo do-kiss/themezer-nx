@@ -269,35 +269,6 @@ void ShowLoadingPageUI(Context_t *ctx, RequestInfo_t *rI){
     RenderShapeLinkList(ctx->all);
 }
 
-void LoadPageFromCache(Context_t *ctx, RequestInfo_t *rI, PageCacheEntry_t *entry){
-    if (!ctx || !rI || !entry || !entry->isLoaded)
-        return;
-
-    CleanupTransferInfo(rI);
-
-    if (rI->themesCached){
-        rI->themes = NULL;
-        rI->packs = NULL;
-    } else {
-        FreeThemes(rI);
-    }
-
-    rI->pageCount = entry->pageCount;
-    rI->itemCount = entry->itemCount;
-    rI->curPageItemCount = entry->curPageItemCount;
-    rI->themes = entry->themes;
-    rI->packs = entry->packs;
-    rI->themesCached = true;
-
-    ShapeLinker_t *items = GenListItemList(rI);
-    AddThemeImagesToDownloadQueue(rI, true);
-    UpdateMainMenuUI(ctx, rI, items);
-
-    PageCache_t *cache = (PageCache_t *)rI->pageCache;
-    if (cache)
-        TriggerPagePreloads(cache, rI);
-}
-
 int MakeRequestAsCtx(Context_t *ctx, RequestInfo_t *rI){
     ShapeLinker_t *items = NULL;
     int res = -1;
@@ -311,12 +282,7 @@ int MakeRequestAsCtx(Context_t *ctx, RequestInfo_t *rI){
             printf("JSON data parsed!\n");
             items = GenListItemList(rI);
             AddThemeImagesToDownloadQueue(rI, true);
-
             UpdateMainMenuUI(ctx, rI, items);
-
-            PageCache_t *cache = (PageCache_t *)rI->pageCache;
-            if (cache)
-                StorePageInCache(cache, rI, items);
         }
     }
     else {

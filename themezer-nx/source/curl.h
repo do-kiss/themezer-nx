@@ -28,14 +28,4 @@ void FreeThemes(RequestInfo_t *rI);
 int LookupByQuickId(const char *quickId, RequestInfo_t *rI, QuickIdLookupType_t *lookupType);
 SDL_Texture *CreateThumbHashTexture(const char *encodedThumbHash);
 
-char *GenPageLink(RequestInfo_t *rI, int page);
-PageCache_t *InitPageCache(void);
-void FreePageCache(PageCache_t *cache);
-void ClearPageCache(PageCache_t *cache);
-PageCacheEntry_t *FindPageCache(PageCache_t *cache, int page);
-int StorePageInCache(PageCache_t *cache, RequestInfo_t *rI, ShapeLinker_t *items);
-void EvictFurthestPage(PageCache_t *cache, int currentPage);
-int StartPagePreload(PageCache_t *cache, RequestInfo_t *rI, int page);
-void PumpPagePreloads(PageCache_t *cache);
-void TriggerPagePreloads(PageCache_t *cache, RequestInfo_t *rI);
 int HandleMainMenuFrame(Context_t *ctx);

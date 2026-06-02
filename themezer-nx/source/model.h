@@ -80,35 +80,6 @@ typedef struct {
     TransferInfo_t tInfo;
     PackInfo_t *packs;
     bool themesCached;
-    int lastPageDir;
-    void *pageCache;
 } RequestInfo_t;
-
-#define PAGE_CACHE_SIZE 3
-#define MAX_PRELOAD_JOBS 1
-
-typedef struct {
-    int page;
-    int pageCount;
-    int itemCount;
-    ThemeInfo_t *themes;
-    PackInfo_t *packs;
-    ShapeLinker_t *listItems;
-    int curPageItemCount;
-    bool isLoaded;
-    bool isLoading;
-} PageCacheEntry_t;
-
-typedef struct {
-    PageCacheEntry_t entries[PAGE_CACHE_SIZE];
-    int count;
-    CURLM *jsonTransferer;
-    Transfer_t jsonTransfers[MAX_PRELOAD_JOBS];
-    int jsonQueueOffset;
-    bool jsonActive;
-    int preloadPages[MAX_PRELOAD_JOBS];
-    int currentTarget;
-    int currentLimit;
-} PageCache_t;
 
 #define ARRAY_SIZE(x) (sizeof(x) / sizeof(*(x)))
