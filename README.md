@@ -38,5 +38,6 @@ When you select "Install theme" the app will queue the install until you exit vi
 For support you can go to the [Themezer discord](https://discord.gg/bBCw6tF)
 
 ## Credits
+- 汉化与优化：[DoKiss](https://github.com/do-kiss)
 - [Exelix11](https://github.com/exelix11) for helping me with cURL and being awesome in general
 - [cJSON](https://github.com/DaveGamble/cJSON) For the json lib used in this project
