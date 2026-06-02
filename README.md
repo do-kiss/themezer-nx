@@ -1,4 +1,21 @@
 # themezer-nx
+A Switch theme downloader that pulls from https://themezer.net/, and installs themes using the NXThemesInstaller.
+
+## NX 主题下载器 (汉化版)
+由 [suchmememanyskill](https://github.com/suchmememanyskill/themezer-nx) 的原始项目 Fork，由 DoKiss 汉化并优化。
+
+## 汉化内容
+- 所有菜单、按钮、弹窗、提示文字均已汉化为简体中文
+- 支持中文输入搜索关键词
+- 新增"儿童不宜内容"过滤开关
+- Font 切换为简体中文字体 (PlSharedFontType_ChineseSimplified)
+- 多项性能优化（ThumbHash LRU 缓存、cJSON 解析加速、网络 I/O 优化）
+
+## 编译
+1. 编译 JAGL：`cd JAGL && make clean && make`
+2. 编译主程序：`cd themezer-nx && make clean && make`
+
+## 原始 README
 A switch theme downloader that pulls from https://themezer.net/, and installs themes using the NXThemesInstaller
 
 [![Build Themezer-nx](https://github.com/suchmememanyskill/themezer-nx/workflows/Build%20Themezer-nx/badge.svg)](https://github.com/suchmememanyskill/themezer-nx/actions)
