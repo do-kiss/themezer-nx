@@ -148,7 +148,7 @@ ShapeLinker_t *CreateSideFilterMenu(FilterOptions_t *options){
         }
         ShapeLinkAdd(&sortList, ListItemCreate((i == options->sort) ? COLOR_FILTERACTIVE : COLOR_WHITE, COLOR_WHITE, sortIcons[i], sortOptions[i], NULL), ListItemType);
     }
-    ShapeLinkAdd(&out, ListViewCreate(POS(0, 194, 400, 184), 46, COLOR_MAINBG, COLOR_CURSOR, COLOR_CURSORPRESS, COLOR_SCROLLBAR, COLOR_SCROLLBARTHUMB, LIST_CENTERLEFT, sortList, SideMenuSortSetSelection, NULL, FONT_TEXT[FSize28]), ListViewType);
+    ShapeLinkAdd(&out, ListViewCreate(POS(0, 194, 400, 184), 46, COLOR_MAINBG, COLOR_CURSOR, COLOR_CURSORPRESS, COLOR_SCROLLBAR, COLOR_SCROLLBARTHUMB, 0, sortList, SideMenuSortSetSelection, NULL, FONT_TEXT[FSize28]), ListViewType);
 
     ShapeLinkAdd(&out, RectangleCreate(POS(0, 378, 400, 44), COLOR_SUBBAR, 1), RectangleType);
     char *order = CopyTextUtil("排序方向");
@@ -164,7 +164,7 @@ ShapeLinker_t *CreateSideFilterMenu(FilterOptions_t *options){
         }
         ShapeLinkAdd(&orderList, ListItemCreate((i == options->order) ? COLOR_FILTERACTIVE : COLOR_WHITE, COLOR_WHITE, orderIcons[i], orderOptions[i], NULL), ListItemType);
     }
-    ShapeLinkAdd(&out, ListViewCreate(POS(0, 422, 400, 100), 50, COLOR_MAINBG, COLOR_CURSOR, COLOR_CURSORPRESS, COLOR_SCROLLBAR, COLOR_SCROLLBARTHUMB, LIST_CENTERLEFT, orderList, SideMenuOrderSetSelection, NULL, FONT_TEXT[FSize28]), ListViewType);
+    ShapeLinkAdd(&out, ListViewCreate(POS(0, 422, 400, 100), 50, COLOR_MAINBG, COLOR_CURSOR, COLOR_CURSORPRESS, COLOR_SCROLLBAR, COLOR_SCROLLBARTHUMB, 0, orderList, SideMenuOrderSetSelection, NULL, FONT_TEXT[FSize28]), ListViewType);
 
     // 儿童不宜内容 — ListView (icons: lock = targetIcons[2], player-select = targetIcons[5])
     ShapeLinkAdd(&out, RectangleCreate(POS(0, 522, 400, 44), COLOR_SUBBAR, 1), RectangleType);
@@ -182,7 +182,7 @@ ShapeLinker_t *CreateSideFilterMenu(FilterOptions_t *options){
     ShapeLinker_t *nsfwList = NULL;
     ShapeLinkAdd(&nsfwList, ListItemCreate(options->includeNSFW ? COLOR_WHITE : COLOR_FILTERACTIVE, COLOR_WHITE, targetIcons[2], "隐藏", NULL), ListItemType);
     ShapeLinkAdd(&nsfwList, ListItemCreate(options->includeNSFW ? COLOR_FILTERACTIVE : COLOR_WHITE, COLOR_WHITE, targetIcons[5], "显示", NULL), ListItemType);
-    ShapeLinkAdd(&out, ListViewCreate(POS(0, 566, 400, 100), 46, COLOR_MAINBG, COLOR_CURSOR, COLOR_CURSORPRESS, COLOR_SCROLLBAR, COLOR_SCROLLBARTHUMB, LIST_CENTERLEFT, nsfwList, SideMenuNsfwSetSelection, NULL, FONT_TEXT[FSize28]), ListViewType);
+    ShapeLinkAdd(&out, ListViewCreate(POS(0, 566, 400, 100), 46, COLOR_MAINBG, COLOR_CURSOR, COLOR_CURSORPRESS, COLOR_SCROLLBAR, COLOR_SCROLLBARTHUMB, 0, nsfwList, SideMenuNsfwSetSelection, NULL, FONT_TEXT[FSize28]), ListViewType);
 
     ShapeLinkAdd(&out, ButtonCreate(POS(0, SCREEN_H - 50, 400, 50), COLOR_MAINBG, COLOR_CARDCURSOR, COLOR_WHITE, COLOR_CURSOR, 0, ButtonStyleBottomStrip, "应用", FONT_TEXT[FSize28], exitFunc), ButtonType);
 

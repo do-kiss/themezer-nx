@@ -247,12 +247,12 @@ ShapeLinker_t *CreatePackDetailsMenu(ShapeLinker_t *items, RequestInfo_t *rI){
     ShapeLinkAdd(&out, ImageCreate(screenshot, POS(0, 0, SCREEN_W, SCREEN_H), IMAGE_CLEANUPTEX), ImageType);
     ShapeLinkAdd(&out, RectangleCreate(POS(0, 0, SCREEN_W, SCREEN_H), COLOR(0,0,0,200), 1), RectangleType);
 
-    // X close button (top-right, touch-only, no d-pad focus)
-    ShapeLinkAdd(&out, ButtonCreate(POS(contentX + contentW - 50, topBarY, 50, topBarH), COLOR_MAINBG, COLOR_RED, COLOR_WHITE, COLOR_CURSOR, BUTTON_NOJOYSEL, ButtonStyleFlat, NULL, NULL, exitFunc), ButtonType);
-    ShapeLinkAdd(&out, ImageCreate(XIcon, POS(contentX + contentW - 50, topBarY, 50, topBarH), 0), ImageType);
-
     // Grid fills most of the screen
     ShapeLinkAdd(&out, ListGridCreate(POS(contentX, topBarY, contentW, gridH + topBarH), 3, 260, COLOR_MAINBG, COLOR_CARDCURSOR, COLOR_CARDCURSORPRESS, COLOR_SCROLLBAR, COLOR_SCROLLBARTHUMB, (items) ? GRID_NOSIDEESC : LIST_DISABLED, items, ThemeSelect, NULL, FONT_TEXT[FSize23]), ListGridType);
+
+    // X close button (top-right, touch-only, no d-pad focus) — placed outside the grid to avoid touch conflicts
+    ShapeLinkAdd(&out, ButtonCreate(POS(contentX + contentW + 5, topBarY, 50, topBarH), COLOR_MAINBG, COLOR_RED, COLOR_WHITE, COLOR_CURSOR, BUTTON_NOJOYSEL, ButtonStyleFlat, NULL, NULL, exitFunc), ButtonType);
+    ShapeLinkAdd(&out, ImageCreate(XIcon, POS(contentX + contentW + 5, topBarY, 50, topBarH), 0), ImageType);
 
     // Action bar: Install All / Download All
     ShapeLinkAdd(&out, RectangleCreate(POS(contentX, actionBarY, contentW, actionBarH), COLOR_TOPBAR, 1), RectangleType);

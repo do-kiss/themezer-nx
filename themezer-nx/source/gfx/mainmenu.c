@@ -18,10 +18,18 @@ int NextPageButton(Context_t *ctx){
     }
 
     rI->page++;
-    ShowLoadingPageUI(ctx, rI);
+    rI->lastPageDir = 1;
 
-    if (MakeRequestAsCtx(ctx,rI))
-        rI->page--;
+    PageCache_t *cache = (PageCache_t *)rI->pageCache;
+    PageCacheEntry_t *cached = cache ? FindPageCache(cache, rI->page) : NULL;
+
+    if (cached && cached->isLoaded){
+        LoadPageFromCache(ctx, rI, cached);
+    } else {
+        ShowLoadingPageUI(ctx, rI);
+        if (MakeRequestAsCtx(ctx, rI))
+            rI->page--;
+    }
 
     return 0;
 }
@@ -35,21 +43,38 @@ int PrevPageButton(Context_t *ctx){
     }
 
     rI->page--;
-    ShowLoadingPageUI(ctx, rI);
+    rI->lastPageDir = -1;
 
-    if (MakeRequestAsCtx(ctx,rI))
-        rI->page++;
+    PageCache_t *cache = (PageCache_t *)rI->pageCache;
+    PageCacheEntry_t *cached = cache ? FindPageCache(cache, rI->page) : NULL;
+
+    if (cached && cached->isLoaded){
+        LoadPageFromCache(ctx, rI, cached);
+    } else {
+        ShowLoadingPageUI(ctx, rI);
+        if (MakeRequestAsCtx(ctx, rI))
+            rI->page++;
+    }
 
     return 0;
 }
 
 int ButtonHandlerMainMenu(Context_t *ctx){
+    RequestInfo_t *rI = ShapeLinkFind(ctx->all, DataType)->item;
+
     if (ctx->kHeld & (HidNpadButton_ZL | HidNpadButton_ZR))
         return ShowQuickIdLookup(ctx);
-    if (ctx->kHeld & HidNpadButton_R)
+    if (ctx->kHeld & HidNpadButton_R){
+        // 图片下载中禁止翻页，防止竞态闪退
+        if (!rI->tInfo.finished)
+            return 0;
         return NextPageButton(ctx);
-    if (ctx->kHeld & HidNpadButton_L)
+    }
+    if (ctx->kHeld & HidNpadButton_L){
+        if (!rI->tInfo.finished)
+            return 0;
         return PrevPageButton(ctx);
+    }
     if (ctx->kHeld & HidNpadButton_Y)
         return ShowSideFilterMenu(ctx);
     if (ctx->kHeld & HidNpadButton_X)

@@ -165,7 +165,7 @@ ShapeLinker_t *CreateSideBaseMenu(char *menuName){ // Count: 7
 
     ShapeLinkAdd(&out, RectangleCreate(POS(0, 0, 350, 50), COLOR_TOPBAR, 1), RectangleType);
     ShapeLinkAdd(&out, TextCenteredCreate(POS(0, 0, 400, 50), menuName, COLOR_WHITE, FONT_TEXT[FSize23]), TextCenteredType);
-    ShapeLinkAdd(&out, ButtonCreate(POS(350, 0, 50, 50), COLOR_TOPBAR, COLOR_RED, COLOR_WHITE, COLOR_TOPBARCURSOR, 0, ButtonStyleFlat, NULL, NULL, exitFunc), ButtonType);
+    ShapeLinkAdd(&out, ButtonCreate(POS(350, 0, 50, 50), COLOR_TOPBAR, COLOR_RED, COLOR_WHITE, COLOR_TOPBARCURSOR, BUTTON_NOJOYSEL, ButtonStyleFlat, NULL, NULL, exitFunc), ButtonType);
     ShapeLinkAdd(&out, ImageCreate(XIcon, POS(350, 0, 50, 50), 0), ImageType);
     ShapeLinkAdd(&out, ButtonCreate(POS(400, 0, SCREEN_W - 400, SCREEN_H), COLOR(0,0,0,170), COLOR(0,0,0,170), COLOR(0,0,0,170), COLOR(0,0,0,170), BUTTON_NOJOYSEL, ButtonStyleFlat, NULL, NULL, exitFunc), ButtonType);
 
@@ -269,6 +269,35 @@ void ShowLoadingPageUI(Context_t *ctx, RequestInfo_t *rI){
     RenderShapeLinkList(ctx->all);
 }
 
+void LoadPageFromCache(Context_t *ctx, RequestInfo_t *rI, PageCacheEntry_t *entry){
+    if (!ctx || !rI || !entry || !entry->isLoaded)
+        return;
+
+    CleanupTransferInfo(rI);
+
+    if (rI->themesCached){
+        rI->themes = NULL;
+        rI->packs = NULL;
+    } else {
+        FreeThemes(rI);
+    }
+
+    rI->pageCount = entry->pageCount;
+    rI->itemCount = entry->itemCount;
+    rI->curPageItemCount = entry->curPageItemCount;
+    rI->themes = entry->themes;
+    rI->packs = entry->packs;
+    rI->themesCached = true;
+
+    ShapeLinker_t *items = GenListItemList(rI);
+    AddThemeImagesToDownloadQueue(rI, true);
+    UpdateMainMenuUI(ctx, rI, items);
+
+    PageCache_t *cache = (PageCache_t *)rI->pageCache;
+    if (cache)
+        TriggerPagePreloads(cache, rI);
+}
+
 int MakeRequestAsCtx(Context_t *ctx, RequestInfo_t *rI){
     ShapeLinker_t *items = NULL;
     int res = -1;
@@ -284,6 +313,10 @@ int MakeRequestAsCtx(Context_t *ctx, RequestInfo_t *rI){
             AddThemeImagesToDownloadQueue(rI, true);
 
             UpdateMainMenuUI(ctx, rI, items);
+
+            PageCache_t *cache = (PageCache_t *)rI->pageCache;
+            if (cache)
+                StorePageInCache(cache, rI, items);
         }
     }
     else {

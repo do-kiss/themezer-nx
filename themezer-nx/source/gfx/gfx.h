@@ -21,6 +21,7 @@ void SetInactiveColorTexture(SDL_Texture *texture);
 int MakeRequestAsCtx(Context_t *ctx, RequestInfo_t *rI);
 void UpdateMainMenuUI(Context_t *ctx, RequestInfo_t *rI, ShapeLinker_t *items);
 void ShowLoadingPageUI(Context_t *ctx, RequestInfo_t *rI);
+void LoadPageFromCache(Context_t *ctx, RequestInfo_t *rI, PageCacheEntry_t *entry);
 void SetMainMenuEmptyMessage(ShapeLinker_t *all, char *emptyMessage);
 void SetMainMenuNoContentState(ShapeLinker_t *all, bool visible);
 ShapeLinker_t *CreateBaseMessagePopup(char *title, char *message);
