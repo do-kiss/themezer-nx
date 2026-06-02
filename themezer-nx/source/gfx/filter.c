@@ -97,6 +97,7 @@ int SideMenuClearSearch(Context_t *ctx){
         options->search = CopyTextUtil("");
         free(text->text.text);
         text->text.text = CopyTextUtil("搜索关键字");
+        text->text.color = COLOR_WHITE;
     }
 
     return 0;
@@ -118,6 +119,7 @@ int SideMenuSetSearch(Context_t *ctx){
         options->search = SanitizeString(out);
         free(text->text.text);
         text->text.text = CopyTextArgsUtil("搜索关键字: %s", options->search);
+        text->text.color = COLOR_FILTERACTIVE;
     }
 
     free(out);
@@ -130,8 +132,9 @@ ShapeLinker_t *CreateSideFilterMenu(FilterOptions_t *options){
     ShapeLinkAdd(&out, options, DataType);
 
     char *search = options->search[0] ? CopyTextArgsUtil("搜索关键字: %s", (options->search)) : CopyTextUtil("搜索关键字");
+    SDL_Color searchColor = options->search[0] ? COLOR_FILTERACTIVE : COLOR_WHITE;
     ShapeLinkAdd(&out, RectangleCreate(POS(0, 60, 400, 44), COLOR_SUBBAR, 1), RectangleType);
-    ShapeLinkAdd(&out, TextCenteredCreate(POS(0, 60, 400, 44), search, COLOR_WHITE, FONT_TEXT[FSize25]), TextCenteredType);
+    ShapeLinkAdd(&out, TextCenteredCreate(POS(0, 60, 400, 44), search, searchColor, FONT_TEXT[FSize25]), TextCenteredType);
     ShapeLinkAdd(&out, ButtonCreate(POS(0, 104, 200, 46), COLOR_MAINBG, COLOR_CURSORPRESS, COLOR_WHITE, COLOR_CURSOR, 0, ButtonStyleFlat, "输入", FONT_TEXT[FSize28], SideMenuSetSearch), ButtonType);
     ShapeLinkAdd(&out, ButtonCreate(POS(200, 104, 200, 46), COLOR_MAINBG, COLOR_CURSORPRESS, COLOR_WHITE, COLOR_CURSOR, 0, ButtonStyleFlat, "清除", FONT_TEXT[FSize28], SideMenuClearSearch), ButtonType);
     free(search);
@@ -166,7 +169,7 @@ ShapeLinker_t *CreateSideFilterMenu(FilterOptions_t *options){
     }
     ShapeLinkAdd(&out, ListViewCreate(POS(0, 422, 400, 100), 50, COLOR_MAINBG, COLOR_CURSOR, COLOR_CURSORPRESS, COLOR_SCROLLBAR, COLOR_SCROLLBARTHUMB, 0, orderList, SideMenuOrderSetSelection, NULL, FONT_TEXT[FSize28]), ListViewType);
 
-    // 儿童不宜内容 — ListView (icons: lock = targetIcons[2], player-select = targetIcons[5])
+    // 儿童不宜内容
     ShapeLinkAdd(&out, RectangleCreate(POS(0, 522, 400, 44), COLOR_SUBBAR, 1), RectangleType);
     char *nsfwLabel = CopyTextUtil("儿童不宜内容");
     ShapeLinkAdd(&out, TextCenteredCreate(POS(0, 522, 400, 44), nsfwLabel, COLOR_WHITE, FONT_TEXT[FSize25]), TextCenteredType);
@@ -206,9 +209,8 @@ int ShowSideFilterMenu(Context_t *ctx){
         rI->includeNSFW = options.includeNSFW;
         rI->page = 1;
 
-        // 筛选条件变化
         CleanupTransferInfo(rI);
-        FreeThemes(rI);  // 释放旧数据（无缓存后 themesCached 始终为 false）
+        FreeThemes(rI);
         rI->themesCached = false;
 
         if (MakeRequestAsCtx(ctx, rI)){

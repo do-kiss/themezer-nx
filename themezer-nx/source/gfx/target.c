@@ -19,6 +19,9 @@ ShapeLinker_t *CreateSideTargetMenu(RequestInfo_t *rI){
     ListView_t *lv = ShapeLinkFind(out, ListViewType)->item;
     lv->highlight = rI->target;
 
+    // 淡灰色小字
+    ShapeLinkAdd(&out, TextCenteredCreate(POS(0, SCREEN_H - 80, 400, 28), "插件优化：忘忧", COLOR(160,160,160,255), FONT_TEXT[FSize20]), TextCenteredType);
+
     ShapeLinkAdd(&out, ButtonCreate(POS(0, SCREEN_H - 50, 400, 50), COLOR_MAINBG, COLOR_RED, COLOR_WHITE, COLOR_CURSOR, 0, ButtonStyleBottomStrip, "退出 Themezer-NX", FONT_TEXT[FSize25], exitFunc), ButtonType);
     ShapeLinkAdd(&out, GlyphCreate(376, SCREEN_H - 48, BUTTON_PLUS, COLOR_WHITE, FONT_BTN[FSize20]), GlyphType);
 

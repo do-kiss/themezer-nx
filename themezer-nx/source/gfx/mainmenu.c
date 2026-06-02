@@ -9,6 +9,37 @@ int lennify(Context_t *ctx){
     return 0;
 }
 
+int PageJumpButton(Context_t *ctx){
+    RequestInfo_t *rI = ShapeLinkFind(ctx->all, DataType)->item;
+
+    char initialPage[8];
+    snprintf(initialPage, sizeof(initialPage), "%d", rI->page);
+    char *out = showKeyboard("输入要跳转的页码", initialPage, 7);
+
+    if (out == NULL)
+        return 0;
+
+    int page = atoi(out);
+    free(out);
+
+    if (page < 1)
+        page = 1;
+    if (page > rI->pageCount)
+        page = rI->pageCount;
+
+    if (page != rI->page){
+        rI->page = page;
+        CleanupTransferInfo(rI);
+        FreeThemes(rI);
+        rI->themesCached = false;
+        ShowLoadingPageUI(ctx, rI);
+        if (MakeRequestAsCtx(ctx, rI))
+            rI->page = 1;
+    }
+
+    return 0;
+}
+
 int NextPageButton(Context_t *ctx){
     ShapeLinker_t *all = ctx->all;
     RequestInfo_t *rI = ShapeLinkFind(all, DataType)->item;
@@ -127,6 +158,9 @@ ShapeLinker_t *CreateMainMenu(ShapeLinker_t *listItems, RequestInfo_t *rI) {
 
     // Text inbetween arrows
     char *temp = CopyTextArgsUtil("%d/%d (%d)", rI->page, rI->pageCount, rI->itemCount);
+    // 页码区按钮（底部高亮，可方向键选中）
+    ShapeLinkAdd(&out, ButtonCreate(POS(920, 0, 240, 60), COLOR_MAIN_TOPBARBUTTONS, accentColor, COLOR_WHITE, COLOR_CURSOR, 0, ButtonStyleBottomStrip, NULL, NULL, PageJumpButton), ButtonType);
+    // 页码文字叠加在按钮上方
     ShapeLinkAdd(&out, TextCenteredCreate(POS(920, 0, 240, 60), temp, COLOR_WHITE, FONT_TEXT[FSize25]), TextCenteredType);
     free(temp);
 
