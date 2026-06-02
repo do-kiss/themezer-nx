@@ -1,7 +1,7 @@
 #include "gfx.h"
 
 ShapeLinker_t *CreateSideTargetMenu(RequestInfo_t *rI){
-    ShapeLinker_t *out = CreateSideBaseMenu("Type");
+    ShapeLinker_t *out = CreateSideBaseMenu("类型");
 
     ShapeLinker_t *list = NULL;
     for (int i = 0; i < 9; i++) {
@@ -15,7 +15,7 @@ ShapeLinker_t *CreateSideTargetMenu(RequestInfo_t *rI){
 
     ShapeLinkAdd(&out, ListViewCreate(POS(0, 50, 400, SCREEN_H - 100), 60, COLOR_MAINBG, COLOR_CURSOR, COLOR_CURSORPRESS, COLOR_SCROLLBAR, COLOR_SCROLLBARTHUMB, LIST_CENTERLEFT, list, exitFunc, NULL, FONT_TEXT[FSize30]), ListViewType);
 
-    ShapeLinkAdd(&out, ButtonCreate(POS(0, SCREEN_H - 50, 400, 50), COLOR_MAINBG, COLOR_RED, COLOR_WHITE, COLOR_CURSOR, 0, ButtonStyleBottomStrip, "Exit Themezer-NX", FONT_TEXT[FSize25], exitFunc), ButtonType);
+    ShapeLinkAdd(&out, ButtonCreate(POS(0, SCREEN_H - 50, 400, 50), COLOR_MAINBG, COLOR_RED, COLOR_WHITE, COLOR_CURSOR, 0, ButtonStyleBottomStrip, "退出 Themezer-NX", FONT_TEXT[FSize25], exitFunc), ButtonType);
     ShapeLinkAdd(&out, GlyphCreate(376, SCREEN_H - 48, BUTTON_PLUS, COLOR_WHITE, FONT_BTN[FSize20]), GlyphType);
 
     return out;
@@ -32,12 +32,15 @@ int ShowSideTargetMenu(Context_t *ctx){
         if (rI->target != selection){
             int tempTarget = rI->target;
             int tempPage = rI->page;
+            bool tempIncludeNSFW = rI->includeNSFW;
             SetDefaultsRequestInfo(rI);
             rI->target = selection;
+            rI->includeNSFW = tempIncludeNSFW;
             printf("Making request...\n");
             if (MakeRequestAsCtx(ctx, rI)){
                 rI->target = tempTarget;
                 rI->page = tempPage;
+                rI->includeNSFW = tempIncludeNSFW;
             }
         }
     }

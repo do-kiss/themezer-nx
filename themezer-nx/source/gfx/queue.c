@@ -9,12 +9,12 @@ int HandleQueueList(Context_t *ctx){
         return 0;
 
     if (!CheckIfInstallSlotIsFree(installSlotOffset)){
-        char *message = CopyTextArgsUtil("Are you sure you want to remove the %s's queued install?", targetOptions[installSlotOffset + 1]);
-        ShapeLinker_t *menu = CreateBaseMessagePopup("Remove Queued Item?", message);
+        char *message = CopyTextArgsUtil("确定要移除 %s 的安装队列吗?", targetOptions[installSlotOffset + 1]);
+        ShapeLinker_t *menu = CreateBaseMessagePopup("移除排队项目?", message);
         free(message);
 
-        ShapeLinkAdd(&menu, ButtonCreate(POS(640, 470, 390, 50), COLOR_MAINBG, COLOR_CURSORPRESS, COLOR_WHITE, COLOR_CURSOR, 0, ButtonStyleBottomStrip, "No", FONT_TEXT[FSize28], exitFunc), ButtonType);
-        ShapeLinkAdd(&menu, ButtonCreate(POS(250, 470, 390, 50), COLOR_MAINBG, COLOR_RED, COLOR_WHITE, COLOR_CURSOR, 0, ButtonStyleBottomStrip, "Yes", FONT_TEXT[FSize28], exitFunc), ButtonType);
+        ShapeLinkAdd(&menu, ButtonCreate(POS(640, 470, 390, 50), COLOR_BTNIDLE, COLOR_INSTALLBTNPRS, COLOR_WHITE, COLOR_INSTALLBTN, 0, ButtonStyleBottomStrip, "否", FONT_TEXT[FSize28], exitFunc), ButtonType);
+        ShapeLinkAdd(&menu, ButtonCreate(POS(250, 470, 390, 50), COLOR_BTNIDLE, COLOR_INSTALLBTNPRS, COLOR_WHITE, COLOR_INSTALLBTN, 0, ButtonStyleBottomStrip, "是", FONT_TEXT[FSize28], exitFunc), ButtonType);
 
         Context_t menuCtx = MakeMenu(menu, ButtonHandlerBExit, NULL);
         ShapeLinkDispose(&menu);
@@ -34,7 +34,7 @@ int HandleQueueList(Context_t *ctx){
 }
 
 ShapeLinker_t *CreateSideQueueMenu(){
-    ShapeLinker_t *out = CreateSideBaseMenu("Queued Installs");
+    ShapeLinker_t *out = CreateSideBaseMenu("安装队列");
 
     ShapeLinker_t *text = NULL;
     int hasAtLeastOne = 0;

@@ -10,6 +10,7 @@ typedef struct {
     int sort;
     int order;
     char *search;
+    bool includeNSFW;
 } FilterOptions_t;
 
 typedef struct {
@@ -70,6 +71,7 @@ typedef struct {
     int sort;
     int order;
     char *search;
+    bool includeNSFW;
     int pageCount;
     int itemCount;
     int curPageItemCount;

@@ -3,14 +3,14 @@
 
 static const char *GetPackThemeTargetLabel(const ThemeInfo_t *theme){
     if (theme->target < 0 || theme->target >= 7)
-        return "Unknown";
+        return "未知";
 
     return targetOptions[theme->target + 1];
 }
 
 static void ShowPackDetailsMessage(char *title, char *message){
     ShapeLinker_t *menu = CreateBaseMessagePopup(title, message);
-    ShapeLinkAdd(&menu, ButtonCreate(POS(250, 470, 780, 50), COLOR_MAINBG, COLOR_CURSORPRESS, COLOR_WHITE, COLOR_CURSOR, 0, ButtonStyleBottomStrip, "Ok", FONT_TEXT[FSize28], exitFunc), ButtonType);
+    ShapeLinkAdd(&menu, ButtonCreate(POS(250, 470, 780, 50), COLOR_BTNIDLE, COLOR_INSTALLBTNPRS, COLOR_WHITE, COLOR_INSTALLBTN, 0, ButtonStyleBottomStrip, "确定", FONT_TEXT[FSize28], exitFunc), ButtonType);
     MakeMenu(menu, ButtonHandlerBExit, NULL);
     ShapeLinkDispose(&menu);
 }
@@ -64,7 +64,7 @@ static int ShowPackTargetChoice(ThemeInfo_t *themes, int themeCount, int target)
     }
 
     SDL_Texture *screenshot = ScreenshotToTexture();
-    char *title = CopyTextArgsUtil("Choose %s Theme", targetOptions[target + 1]);
+    char *title = CopyTextArgsUtil("选择 %s 主题", targetOptions[target + 1]);
     ShapeLinkAdd(&menu, ImageCreate(screenshot, POS(0, 0, SCREEN_W, SCREEN_H), IMAGE_CLEANUPTEX), ImageType);
     ShapeLinkAdd(&menu, RectangleCreate(POS(0, 0, SCREEN_W, SCREEN_H), COLOR(0,0,0,200), 1), RectangleType);
     ShapeLinkAdd(&menu, RectangleCreate(POS(250, 120, SCREEN_W - 500, 50), COLOR_TOPBAR, 1), RectangleType);
@@ -101,12 +101,12 @@ static int ConfirmPackInstallOverwrite(const int *selectedThemes){
     if (conflictCount == 0)
         return 1;
 
-    char *message = CopyTextArgsUtil("This will replace %d queued install%s. Continue?", conflictCount, conflictCount == 1 ? "" : "s");
-    ShapeLinker_t *menu = CreateBaseMessagePopup("Replace Queued Installs?", message);
+    char *message = CopyTextArgsUtil("这将替换 %d 个安装队列项目%s。是否继续?", conflictCount, conflictCount == 1 ? "" : "项");
+    ShapeLinker_t *menu = CreateBaseMessagePopup("替换安装队列?", message);
     free(message);
 
-    ShapeLinkAdd(&menu, ButtonCreate(POS(640, 470, 390, 50), COLOR_MAINBG, COLOR_CURSORPRESS, COLOR_WHITE, COLOR_CURSOR, 0, ButtonStyleBottomStrip, "No", FONT_TEXT[FSize28], exitFunc), ButtonType);
-    ShapeLinkAdd(&menu, ButtonCreate(POS(250, 470, 390, 50), COLOR_MAINBG, COLOR_RED, COLOR_WHITE, COLOR_CURSOR, 0, ButtonStyleBottomStrip, "Yes", FONT_TEXT[FSize28], exitFunc), ButtonType);
+    ShapeLinkAdd(&menu, ButtonCreate(POS(640, 470, 390, 50), COLOR_BTNIDLE, COLOR_INSTALLBTNPRS, COLOR_WHITE, COLOR_INSTALLBTN, 0, ButtonStyleBottomStrip, "否", FONT_TEXT[FSize28], exitFunc), ButtonType);
+    ShapeLinkAdd(&menu, ButtonCreate(POS(250, 470, 390, 50), COLOR_BTNIDLE, COLOR_INSTALLBTNPRS, COLOR_WHITE, COLOR_INSTALLBTN, 0, ButtonStyleBottomStrip, "是", FONT_TEXT[FSize28], exitFunc), ButtonType);
 
     Context_t menuCtx = MakeMenu(menu, ButtonHandlerBExit, NULL);
     ShapeLinkDispose(&menu);
@@ -117,11 +117,11 @@ static int ConfirmPackInstallOverwrite(const int *selectedThemes){
 int DownloadPackButton(Context_t *ctx){
     RequestInfo_t *rI = ShapeLinkFind(ctx->all, DataType)->item;
     TextCentered_t *progressText = NULL;
-    ShapeLinker_t *progress = CreatePackProgressMenu("Downloading Themes...", &progressText);
+    ShapeLinker_t *progress = CreatePackProgressMenu("正在下载主题...", &progressText);
     int failures = 0;
 
     for (int i = 0; i < rI->curPageItemCount; i++){
-        char *message = CopyTextArgsUtil("Downloading Themes... %d/%d", i + 1, rI->curPageItemCount);
+        char *message = CopyTextArgsUtil("正在下载主题... %d/%d", i + 1, rI->curPageItemCount);
         free(progressText->text.text);
         progressText->text.text = CopyTextUtil(message);
         free(message);
@@ -134,12 +134,12 @@ int DownloadPackButton(Context_t *ctx){
     ShapeLinkDispose(&progress);
 
     if (failures){
-        char *message = CopyTextArgsUtil("%d theme%s failed to download.", failures, failures == 1 ? "" : "s");
-        ShowPackDetailsMessage("Download Incomplete", message);
+        char *message = CopyTextArgsUtil("%d 个主题下载失败。", failures);
+        ShowPackDetailsMessage("下载未完成", message);
         free(message);
     }
     else {
-        ShowPackDetailsMessage("Download Complete", "All themes in this pack were downloaded.");
+        ShowPackDetailsMessage("下载完成", "此包中的所有主题已下载完成。");
     }
 
     return 0;
@@ -180,7 +180,7 @@ int InstallPackButton(Context_t *ctx){
     }
 
     if (selectedCount == 0){
-        ShowPackDetailsMessage("Nothing Queued", "This pack does not contain any installable themes.");
+        ShowPackDetailsMessage("未加入队列", "此包不包含任何可安装的主题。");
         return 0;
     }
 
@@ -188,7 +188,7 @@ int InstallPackButton(Context_t *ctx){
         return 0;
 
     TextCentered_t *progressText = NULL;
-    ShapeLinker_t *progress = CreatePackProgressMenu("Queueing Installs...", &progressText);
+    ShapeLinker_t *progress = CreatePackProgressMenu("正在加入安装队列...", &progressText);
     int failures = 0;
     int queued = 0;
     int processed = 0;
@@ -199,7 +199,7 @@ int InstallPackButton(Context_t *ctx){
 
         ThemeInfo_t *theme = &rI->themes[selectedThemes[target]];
         processed++;
-        char *message = CopyTextArgsUtil("Queueing Installs... %d/%d", processed, selectedCount);
+        char *message = CopyTextArgsUtil("正在加入安装队列... %d/%d", processed, selectedCount);
         free(progressText->text.text);
         progressText->text.text = CopyTextUtil(message);
         free(message);
@@ -219,13 +219,13 @@ int InstallPackButton(Context_t *ctx){
     ShapeLinkDispose(&progress);
 
     if (failures){
-        char *message = CopyTextArgsUtil("%d install%s queued. %d theme%s failed to download.", queued, queued == 1 ? "" : "s", failures, failures == 1 ? "" : "s");
-        ShowPackDetailsMessage("Install Incomplete", message);
+        char *message = CopyTextArgsUtil("%d 个已加入安装队列。%d 个主题下载失败。", queued, failures);
+        ShowPackDetailsMessage("安装未完成", message);
         free(message);
     }
     else {
-        char *message = CopyTextArgsUtil("%d install%s queued. Exit the app to apply the themes.\nYou can exit the app by pressing the + button.", queued, queued == 1 ? "" : "s");
-        ShowPackDetailsMessage("Installs Queued", message);
+        char *message = CopyTextArgsUtil("%d 个已加入安装队列。退出应用以应用主题。\n你可以按 + 键退出应用。", queued);
+        ShowPackDetailsMessage("已加入安装队列", message);
         free(message);
     }
 
@@ -246,12 +246,18 @@ ShapeLinker_t *CreatePackDetailsMenu(ShapeLinker_t *items, RequestInfo_t *rI){
     SDL_Texture *screenshot = ScreenshotToTexture();
     ShapeLinkAdd(&out, ImageCreate(screenshot, POS(0, 0, SCREEN_W, SCREEN_H), IMAGE_CLEANUPTEX), ImageType);
     ShapeLinkAdd(&out, RectangleCreate(POS(0, 0, SCREEN_W, SCREEN_H), COLOR(0,0,0,200), 1), RectangleType);
-    ShapeLinkAdd(&out, RectangleCreate(POS(contentX, topBarY, contentW, topBarH), COLOR_TOPBAR, 1), RectangleType);
-    ShapeLinkAdd(&out, ButtonCreate(POS(contentX, topBarY, contentW, topBarH), COLOR_TOPBAR, COLOR_RED, COLOR_WHITE, COLOR_TOPBARCURSOR, 0, ButtonStyleTopStrip, "Back", FONT_TEXT[FSize25], exitFunc), ButtonType);
-    ShapeLinkAdd(&out, ListGridCreate(POS(contentX, gridY, contentW, gridH), 3, 260, COLOR_MAINBG, COLOR_CARDCURSOR, COLOR_CARDCURSORPRESS, COLOR_SCROLLBAR, COLOR_SCROLLBARTHUMB, (items) ? GRID_NOSIDEESC : LIST_DISABLED, items, ThemeSelect, NULL, FONT_TEXT[FSize23]), ListGridType);
+
+    // X close button (top-right, touch-only, no d-pad focus)
+    ShapeLinkAdd(&out, ButtonCreate(POS(contentX + contentW - 50, topBarY, 50, topBarH), COLOR_MAINBG, COLOR_RED, COLOR_WHITE, COLOR_CURSOR, BUTTON_NOJOYSEL, ButtonStyleFlat, NULL, NULL, exitFunc), ButtonType);
+    ShapeLinkAdd(&out, ImageCreate(XIcon, POS(contentX + contentW - 50, topBarY, 50, topBarH), 0), ImageType);
+
+    // Grid fills most of the screen
+    ShapeLinkAdd(&out, ListGridCreate(POS(contentX, topBarY, contentW, gridH + topBarH), 3, 260, COLOR_MAINBG, COLOR_CARDCURSOR, COLOR_CARDCURSORPRESS, COLOR_SCROLLBAR, COLOR_SCROLLBARTHUMB, (items) ? GRID_NOSIDEESC : LIST_DISABLED, items, ThemeSelect, NULL, FONT_TEXT[FSize23]), ListGridType);
+
+    // Action bar: Install All / Download All
     ShapeLinkAdd(&out, RectangleCreate(POS(contentX, actionBarY, contentW, actionBarH), COLOR_TOPBAR, 1), RectangleType);
-    ShapeLinkAdd(&out, ButtonCreate(POS(contentX + 30, actionBarY + 5, 470, 50), COLOR_INSTALLBTN, COLOR_INSTALLBTNPRS, COLOR_WHITE, COLOR_INSTALLBTNSEL, GetInstallButtonState() ? 0 : BUTTON_DISABLED, ButtonStyleFlat, "Install All", FONT_TEXT[FSize25], InstallPackButton), ButtonType);
-    ShapeLinkAdd(&out, ButtonCreate(POS(contentX + contentW - 500, actionBarY + 5, 470, 50), COLOR_DOWNLOADBTN, COLOR_DOWNLOADBTNPRS, COLOR_WHITE, COLOR_DOWNLOADBTNSEL, 0, ButtonStyleFlat, "Download All", FONT_TEXT[FSize25], DownloadPackButton), ButtonType);
+    ShapeLinkAdd(&out, ButtonCreate(POS(contentX + 30, actionBarY + 5, 470, 50), COLOR_BTNIDLE, COLOR_INSTALLBTNPRS, COLOR_WHITE, COLOR_INSTALLBTN, GetInstallButtonState() ? 0 : BUTTON_DISABLED, ButtonStyleFlat, "全部安装", FONT_TEXT[FSize25], InstallPackButton), ButtonType);
+    ShapeLinkAdd(&out, ButtonCreate(POS(contentX + contentW - 500, actionBarY + 5, 470, 50), COLOR_BTNIDLE, COLOR_DOWNLOADBTNPRS, COLOR_WHITE, COLOR_DOWNLOADBTN, 0, ButtonStyleFlat, "全部下载", FONT_TEXT[FSize25], DownloadPackButton), ButtonType);
     ShapeLinkAdd(&out, rI, DataType);
 
     return out;
@@ -262,7 +268,7 @@ int ShowPackDetails(Context_t *ctx){
     RequestInfo_t *rI = ShapeLinkFind(ctx->all, DataType)->item;
     // target = -1 (not 0): prevents ThemeSelect from treating these as a pack listing and
     // recursively calling ShowPackDetails with a NULL packs array
-    RequestInfo_t customRI = {12, -1, 0, 0, 0, 0, NULL, 0, 0, rI->packs[gv->highlight].themeCount, NULL, rI->packs[gv->highlight].themes, {NULL, 0, NULL, 1}, NULL};
+    RequestInfo_t customRI = {12, -1, 0, 0, 0, 0, NULL, false, 0, 0, rI->packs[gv->highlight].themeCount, NULL, rI->packs[gv->highlight].themes, {NULL, 0, NULL, 1}, NULL};
 
     printf("Showing pack details...\nCount: %d\nEntry: %d\n", rI->packs[gv->highlight].themeCount, gv->highlight);
 

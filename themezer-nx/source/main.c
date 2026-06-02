@@ -17,22 +17,22 @@
 ShapeLinker_t *errorMenu(char *message, int errLoc){
     ShapeLinker_t *out = NULL;
     
-    ShapeLinkAdd(&out, ButtonCreate(POS(0, 50, SCREEN_W, SCREEN_H - 50), COLOR_MAINBG, COLOR_CURSORPRESS, COLOR_WHITE, COLOR_MAINBG, 0, ButtonStyleFlat, "Could not connect to the Themezer. Press A to exit", FONT_TEXT[FSize35], exitFunc), ButtonType);
+    ShapeLinkAdd(&out, ButtonCreate(POS(0, 50, SCREEN_W, SCREEN_H - 50), COLOR_BTNIDLE, COLOR_INSTALLBTNPRS, COLOR_WHITE, COLOR_INSTALLBTN, 0, ButtonStyleFlat, "无法连接到 Themezer。按 A 退出", FONT_TEXT[FSize35], exitFunc), ButtonType);
     if (message)
         ShapeLinkAdd(&out, TextCenteredCreate(POS(0, SCREEN_H - 50, 1280, 50), message, COLOR_RED, FONT_TEXT[FSize30]), TextCenteredType);
 
     bool ShowErrMenu = (errLoc == 1 && cURLErrBuff[0] != '\0');
-    ShapeLinkAdd(&out, ButtonCreate(POS(0, 0, SCREEN_W, 50), COLOR_TOPBAR, COLOR_RED, COLOR_WHITE, COLOR_TOPBARCURSOR, (ShowErrMenu) ? 0 : BUTTON_DISABLED, ButtonStyleTopStrip, (ShowErrMenu) ? "Details" : "Details Unavailable", FONT_TEXT[FSize30], ShowCurlError), ButtonType);
+    ShapeLinkAdd(&out, ButtonCreate(POS(0, 0, SCREEN_W, 50), COLOR_TOPBAR, COLOR_RED, COLOR_WHITE, COLOR_TOPBARCURSOR, (ShowErrMenu) ? 0 : BUTTON_DISABLED, ButtonStyleTopStrip, (ShowErrMenu) ? "详细信息" : "无详细信息", FONT_TEXT[FSize30], ShowCurlError), ButtonType);
 
     return out;
 }
 
 ShapeLinker_t *WarnMenu(){
-    ShapeLinker_t *warnMenu = CreateBaseMessagePopup("Warning!", "The NXThemes Installer could not be found!\nMake sure it is in the following location:\n\nsd:/switch/NXThemesInstaller.nro");
+    ShapeLinker_t *warnMenu = CreateBaseMessagePopup("警告!", "未找到 NXThemes Installer!\n请确保它位于以下位置:\n\nsd:/switch/NXThemesInstaller.nro");
 
     ShapeLinkAdd(&warnMenu, RectangleCreate(POS(250, 470, 780, 50), COLOR_CURSOR, 1), RectangleType);
     ShapeLinkAdd(&warnMenu, ButtonCreate(POS(0, 0, SCREEN_W, SCREEN_H), COLOR(0,0,0,0), COLOR(0,0,0,0), COLOR(0,0,0,0), COLOR(0,0,0,0), 0, ButtonStyleFlat, NULL, NULL, exitFunc), ButtonType);
-    ShapeLinkAdd(&warnMenu, TextCenteredCreate(POS(250, 470, 780, 50), "Alright", COLOR_WHITE, FONT_TEXT[FSize28]), TextCenteredType);
+    ShapeLinkAdd(&warnMenu, TextCenteredCreate(POS(250, 470, 780, 50), "知道了", COLOR_WHITE, FONT_TEXT[FSize28]), TextCenteredType);
 
     return warnMenu;
 }
@@ -49,7 +49,7 @@ int main(int argc, char* argv[])
     InitHid();
     //nxlinkStdio();
 
-    RequestInfo_t rI = {0, 0, 0, 0, 0, 0, "", 0, 0, 0, NULL, NULL, {NULL, 0, NULL, true}, NULL};
+    RequestInfo_t rI = {0, 0, 0, 0, 0, 0, "", false, 0, 0, 0, NULL, NULL, {NULL, 0, NULL, true}, NULL};
     SetDefaultsRequestInfo(&rI);
     rI.target = 0;
     ShapeLinker_t *items = NULL;
@@ -84,12 +84,12 @@ int main(int argc, char* argv[])
         }
         else {
             printf(CopyTextArgsUtil("Theme array gen failed, %d", res));
-            errMessage = CopyTextArgsUtil("Parsing Json data failed! Error Code: %d", res);
+            errMessage = CopyTextArgsUtil("JSON 数据解析失败! 错误代码: %d", res);
         }       
     }
     else {
         printf("Request failed");
-        errMessage = CopyTextArgsUtil("Themezer request failed! Error Code: %d", res);
+        errMessage = CopyTextArgsUtil("Themezer 请求失败! 错误代码: %d", res);
         errLoc = 1;
     }
         
