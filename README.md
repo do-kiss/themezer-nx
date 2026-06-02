@@ -41,3 +41,6 @@ For support you can go to the [Themezer discord](https://discord.gg/bBCw6tF)
 ## Credits
 - [Exelix11](https://github.com/exelix11) for helping me with cURL and being awesome in general
 - [cJSON](https://github.com/DaveGamble/cJSON) For the json lib used in this project
+- [JAGL](https://github.com/suchmememanyskill/JAGL) Just another graphics library for the Switch
+- 中文字体：Switch 系统简体中文字体（PlSharedFontType_ChineseSimplified）
+- 按钮图标字体：Switch 系统任天堂扩展字体（PlSharedFontType_NintendoExt）
