@@ -2,13 +2,13 @@
 A Switch theme downloader that pulls from https://themezer.net/, and installs themes using the NXThemesInstaller.
 
 ## NX 主题下载器 (汉化版)
-由 [suchmememanyskill](https://github.com/suchmememanyskill/themezer-nx) 的原始项目 Fork，由 DoKiss 汉化并优化。
+Fork 自 [suchmememanyskill/themezer-nx](https://github.com/suchmememanyskill/themezer-nx)。
 
 ## 汉化内容
 - 所有菜单、按钮、弹窗、提示文字均已汉化为简体中文
-- 支持中文输入搜索关键词
+- 使用 Switch 系统简体中文字体
+- 支持中文关键词搜索
 - 新增"儿童不宜内容"过滤开关
-- Font 切换为简体中文字体 (PlSharedFontType_ChineseSimplified)
 - 多项性能优化（ThumbHash LRU 缓存、cJSON 解析加速、网络 I/O 优化）
 
 ## 编译
@@ -38,6 +38,5 @@ When you select "Install theme" the app will queue the install until you exit vi
 For support you can go to the [Themezer discord](https://discord.gg/bBCw6tF)
 
 ## Credits
-- 汉化与优化：[DoKiss](https://github.com/do-kiss)
 - [Exelix11](https://github.com/exelix11) for helping me with cURL and being awesome in general
 - [cJSON](https://github.com/DaveGamble/cJSON) For the json lib used in this project
