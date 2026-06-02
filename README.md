@@ -7,9 +7,10 @@ Fork 自 [suchmememanyskill/themezer-nx](https://github.com/suchmememanyskill/th
 ## 汉化内容
 - 所有菜单、按钮、弹窗、提示文字均已汉化为简体中文
 - 使用 Switch 系统简体中文字体
-- 支持中文关键词搜索
+- 支持中文关键词搜索，搜索激活时关键字高亮显示
 - 新增"儿童不宜内容"过滤开关
-- 多项性能优化（ThumbHash LRU 缓存、cJSON 解析加速、网络 I/O 优化）
+- 右上角页码区域触控点击可输入页码直接跳页
+- 多项性能优化（实时加载、无缓存策略，避免内存泄漏和闪退）
 
 ## 编译
 1. 编译 JAGL：`cd JAGL && make clean && make`
