@@ -9,7 +9,7 @@ int FontInit(){
         return -1;
 
     PlFontData font, button;
-    if (plGetSharedFontByType(&font, PlSharedFontType_Standard) || plGetSharedFontByType(&button, PlSharedFontType_NintendoExt))
+    if (plGetSharedFontByType(&font, PlSharedFontType_ChineseSimplified) || plGetSharedFontByType(&button, PlSharedFontType_NintendoExt))
         return -1;
 
     int font_sizes[] = { 15, 18, 20, 23, 25, 28, 30, 33, 35, 45, 48, 60, 63, 72, 170 };

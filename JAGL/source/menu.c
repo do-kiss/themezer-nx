@@ -197,6 +197,14 @@ Context_t MakeMenu(ShapeLinker_t *in, func_ptr buttonHandler, func_ptr runEveryF
     
     for (ShapeLinker_t *iter = in; iter != NULL; iter = iter->next){
         if (iter->type >= ListViewType){
+            // 跳过仅触摸的按钮（BUTTON_NOJOYSEL），不默认选中
+            if (iter->type == ButtonType){
+                Button_t *btn = iter->item;
+                if (btn->options & BUTTON_NOJOYSEL){
+                    ctx.curOffset++;
+                    continue;
+                }
+            }
             ctx.selected = iter;
             break;
         }
