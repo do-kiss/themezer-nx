@@ -12,6 +12,17 @@ const char *targetOptions[] = {
     "全部"
 };
 
+// 文件路径用英文名，避免 Switch 文件系统中文路径写失败
+const char *targetFileNames[] = {
+    "HomeMenu",
+    "Lockscreen",
+    "AllApps",
+    "Settings",
+    "PlayerSelect",
+    "UserPage",
+    "News"
+};
+
 const char *sortOptions[] = {
     "创建时间",
     "更新时间",

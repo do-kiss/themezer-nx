@@ -12,5 +12,5 @@ int CheckIfInstallSlotIsFree(int pos);
 void AllocateInstalls(int len);
 int CheckIfInstallsQueued();
 const char* GetThemeInstallerPath();
-char *GetThemePath(const char *creator, const char *themeName, const char *themeType);
+char *GetThemePath(const char *creator, const char *themeName, int target);
 int GetInstallSlotOffset(char *name);

@@ -4,7 +4,7 @@
 #include <curl/curl.h>
 #include "libs/cJSON.h"
 
-extern const char *targetOptions[], *sortOptions[], *orderOptions[];
+extern const char *targetOptions[], *sortOptions[], *orderOptions[], *targetFileNames[];
 
 typedef struct {
     int sort;
